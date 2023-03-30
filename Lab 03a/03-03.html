@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Factorial Calculator</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+  $('button#calculateFactorials').on('click', function() {
+    const resultsElement = $('#results');
+    resultsElement.empty();
+
+    const startTime = Date.now();
+    for (let x = 0; x <= 20; x++) {
+      $.get(`/fact?k=${x}`, function(data) {
+        const elapsedTime = Date.now() - startTime;
+        const expression = `${x}/${data.fact}`;
+        const result = $('<div>').text(`Factorial: ${elapsedTime}-${expression})`);
+        resultsElement.append(result);
+      }).fail(function(error) {
+        console.error(error);
+      });
+    }
+  });
+});
+  </script>
+</head>
+<body>
+  <h1>Factorial Calculator</h1>
+  <button id="calculateFactorials">Calculate Factorials</button>
+  <div id="results"></div>
+</body>
+</html>

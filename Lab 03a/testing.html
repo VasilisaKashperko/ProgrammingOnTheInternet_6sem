@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Factorial Calculator</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    .column {
+      display: inline-block;
+      width: 33.33%;
+      padding: 10px;
+    }
+  </style>
+  <script>
+    $(document).ready(function() {
+      $('button#calculateFactorials').on('click', function() {
+        const resultsElement1 = $('#results1');
+        const resultsElement2 = $('#results2');
+        const resultsElement3 = $('#results3');
+        resultsElement1.empty();
+        resultsElement2.empty();
+        resultsElement3.empty();
+
+        const startTime = Date.now();
+        for (let x = 0; x <= 20; x++) {
+          // Using /fact1 endpoint for synchronous factorial function
+          $.get(`/fact1?k=${x}`, function(data) {
+            const elapsedTime = Date.now() - startTime;
+            const expression = `${x}/${data.fact}`;
+            const result = $('<div>').text(`Factorial: ${elapsedTime}-${expression}`);
+            resultsElement1.append(result);
+          }).fail(function(error) {
+            console.error(error);
+          });
+
+          // Using /fact2 endpoint for factorial function with process.nextTick
+          $.get(`/fact2?k=${x}`, function(data) {
+            const elapsedTime = Date.now() - startTime;
+            const expression = `${x}/${data.fact}`;
+            const result = $('<div>').text(`Factorial: ${elapsedTime}-${expression}`);
+            resultsElement2.append(result);
+          }).fail(function(error) {
+            console.error(error);
+          });
+
+          // Using /fact3 endpoint for factorial function with setImmediate
+          $.get(`/fact3?k=${x}`, function(data) {
+            const elapsedTime = Date.now() - startTime;
+            const expression = `${x}/${data.fact}`;
+            const result = $('<div>').text(`Factorial: ${elapsedTime}-${expression}`);
+            resultsElement3.append(result);
+          }).fail(function(error) {
+            console.error(error);
+          });
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>Factorial Calculator</h1>
+  <button id="calculateFactorials">Race Factorials!</button>
+  <div class="column">
+    <h2>Synchronous Factorial</h2>
+    <div id="results1"></div>
+  </div>
+  <div class="column">
+    <h2>Factorial with process.nextTick</h2>
+    <div id="results2"></div>
+  </div>
+  <div class="column">
+    <h2>Factorial with setImmediate</h2>
+    <div id="results3"></div>
+  </div>
+</body>
+</html>

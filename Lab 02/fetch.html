@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Fetch Example</title>
+</head>
+<body>
+	<h1>Random Cat Image</h1>
+	<p id="cutietext"></p>
+	<img id="catImage">
+	<button onclick="getCatImage()">Get Cat Image</button>
+    
+	<script>
+		const API_KEY = 'your-api-key-here';
+		const catImage = document.getElementById('catImage');
+
+        function getName() {
+			const xhr = new XMLHttpRequest();
+			const url = `http://127.0.0.1:5000/api/name`;
+
+			xhr.open('GET', url, true);
+
+			xhr.onload = function() {
+				if (xhr.status === 200) {
+					console.log("test")
+                    const text = document.getElementById('cutietext')
+                    text.innerHTML = "My name is " + xhr.responseText;
+				}
+			};
+
+			xhr.onerror = function() {
+				console.log('Error');
+			};
+
+			xhr.send();
+		}
+
+		function getCatImage() {
+			const xhr = new XMLHttpRequest();
+			const url = `https://api.thecatapi.com/v1/images/search?limit=10`;
+
+			xhr.open('GET', url, true);
+
+			xhr.onload = function() {
+				if (xhr.status === 200) {
+					const response = JSON.parse(xhr.responseText);
+					const imageUrl = response[0].url;
+					catImage.src = imageUrl;
+					getName();
+				}
+			};
+
+			xhr.onerror = function() {
+				console.log('Error');
+			};
+
+			xhr.send();
+		}
+	</script>
+</body>
+</html>
